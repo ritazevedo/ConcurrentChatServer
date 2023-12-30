@@ -56,7 +56,7 @@ public class ChatServer {
 
                 ExecutorService executor = Executors.newCachedThreadPool();
 
-                ServerWorker server = new ServerWorker(clientSocket, this);
+                ServerWorker server = new ServerWorker(clientSocket);
 
                 list.add(server);
 
@@ -105,16 +105,14 @@ public class ChatServer {
     public class ServerWorker implements Runnable {
 
         private Socket socket;
-        private ChatServer server;
         private BufferedReader in;
         private OutputStream outputStream;
         private String line;
         private String name;
         private static LinkedList<String> names = new LinkedList<>();
 
-        public ServerWorker(Socket socket, ChatServer server) throws IOException {
+        public ServerWorker(Socket socket) throws IOException {
             this.socket = socket;
-            this.server = server;
         }
 
         public void defineName() throws IOException {
@@ -165,9 +163,9 @@ public class ChatServer {
 
                     line = name + " - " + in.readLine();
 
-                    String[] firstLines = line.split(" ");
+                    String[] firstLines = line.split(" ", 3);
 
-                    String[] secondLines = firstLines[2].split("-");
+                    String[] secondLines = firstLines[2].split("-", 3);
 
                     if (secondLines[0].equals("/whisper")) {
                         String message = name + " - " + secondLines[2];
